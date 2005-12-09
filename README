@@ -1,0 +1,17 @@
+
+libtpproto-php
+----------------------------------------------------------
+This library provides the basic tools for connecting to and 
+communicating with Thousand Parsec servers.
+
+It does *NOT* support creating servers (and never will).
+
+The library is extremly simple, it does only minor sanity checking
+so be careful in what you do!
+
+This library is under the LGPL.
+For this license any PHP application which uses this library is 
+considered to be "linked" against the library and thus not required
+to be release under (L)GPL compatible licenses. Any changes to 
+these original files (or code taken from these files) MUST follow
+the LGPL.
