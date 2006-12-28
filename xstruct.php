@@ -103,17 +103,18 @@ function pack_full($struct, $args) {
 		if ($char == ' ' or $char == '!') {
 			continue;
 		} else if ($char == '{') {
-			$end = strpos('}', $struct);
+			$end = strpos($struct, '}');
 			$substruct = substr($struct, 0, $end);
-			$struct = substr($struct, $end);
-			
-			$result .= pack_list('L', array_shift($args));
+			$struct = substr($struct, $end+1);
+	
+	
+			$result .= pack_list('L', $substruct, array_shift($args));
 		} else if ($char == '[') {
-			$end = strpos(']', $struct);
+			$end = strpos($struct, ']');
 			$substruct = substr($struct, 0, $end);
-			$struct = substr($struct, $end);
-			
-			$result .= pack_list('I', array_shift($args));
+			$struct = substr($struct, $end+1);
+
+			$result .= pack_list('I', $substruct, array_shift($args));
 		} else if ($char == 'S') {
 			$result .= pack_string(array_shift($args));
 		} else if (ctype_digit($char)) {
@@ -140,7 +141,7 @@ function pack_full($struct, $args) {
 				}
 			}
 		} else if (array_key_exists(strtolower($char), $ints)) {
-			$unsigned = ctype_upper($char) or strpos($char, $sints) != false;
+			$unsigned = ctype_upper($char) or (strpos($char, $sints) != false);
 			$result .= pack_Int($ints[strtolower($char)], array_shift($args), !$unsigned);
 
 		} else {
@@ -167,14 +168,14 @@ function unpack_full($struct, $string) {
 			$substruct = substr($struct, 0, $end);
 			$struct = substr($struct, $end);
 			
-			list($result[], $string) = unpack_list('L', $string);
+			list($result[], $string) = unpack_list('L', $substruct, $string);
 			
 		} else if ($char == '[') {
 			$end = strpos(']', $struct);
 			$substruct = substr($struct, 0, $end);
 			$struct = substr($struct, $end);
 			
-			list($result[], $string) = unpack_list('I', $string);
+			list($result[], $string) = unpack_list('I', $substruct, $string);
 		} else if ($char == 'S') {
 			list($result[], $string) = unpack_string($string);
 		} else if (ctype_digit($char)) {
@@ -227,7 +228,7 @@ print_r($string);
 */
 
 function pack_string($s) {
-	return pack_full('I', len($s)) . $s;
+	return pack_full('I', array(strlen($s))) . $s;
 }
 
 function unpack_string($s) {
@@ -241,6 +242,13 @@ function unpack_string($s) {
 	return array($r, substr($s, $length[0]));
 }
 
+function pack_list($h, $struct, $args) {
+	$s = pack_full($h, array(count($args)));
+	foreach($args as $arg) {
+		$s .= pack_full($struct, array($arg));
+	}
+	return $s;
+}
 
 /*
 def pack_list(length_struct, struct, args):
