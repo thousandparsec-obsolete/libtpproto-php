@@ -12,7 +12,7 @@ class Frame {
 	const CONNECT	= 3;
 	const LOGIN		= 4;
 
-	const GAMES		= 99;
+	const GAME		= 63;
 
 	private static $data_structs = array(
 		Frame::FAIL 	=> "IS",
@@ -20,7 +20,7 @@ class Frame {
 		Frame::CONNECT	=> "S",
 		Frame::LOGIN	=> "SS",
 
-		Frame::GAMES	=> "SI[S]SSSS[SSSI][ISI]"
+		Frame::GAME		=> "SS[S]SSSS[SSSI][ISI]"
 	);
 	
 	private static $data_arrays = array(
@@ -29,7 +29,7 @@ class Frame {
 		Frame::CONNECT	=> array('s'),
 		Frame::LOGIN	=> array('username', 'password'),
 
-		Frame::GAMES	=> array('name', 'lastseen', 'tp', 'server', 'sertype', 'rule', 'rulever', 'locations', 'optional'),
+		Frame::GAME		=> array('name', 'key', 'tp', 'server', 'sertype', 'rule', 'rulever', 'locations', 'optional'),
 							//array('type', 'host', 'ip', 'port')
 	);
 

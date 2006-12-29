@@ -245,7 +245,9 @@ function unpack_string($s) {
 function pack_list($h, $struct, $args) {
 	$s = pack_full($h, array(count($args)));
 	foreach($args as $arg) {
-		$s .= pack_full($struct, array($arg));
+		if (strlen($struct) == 1)
+			$arg = array($arg);
+		$s .= pack_full($struct, $arg);
 	}
 	return $s;
 }
