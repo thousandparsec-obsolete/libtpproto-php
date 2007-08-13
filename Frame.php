@@ -7,6 +7,7 @@ class Frame {
 	private static	$header_struct	= "4sIII"; /* The structure of the header */
 	private static	$header_array	= array("protocol", "sequence", "type", "length"); /* What the values map too */
 
+	const OKAY		= 0;
 	const FAIL		= 1;
 	const SEQUENCE	= 2;
 	const CONNECT	= 3;
@@ -15,6 +16,7 @@ class Frame {
 	const GAME		= 63;
 
 	private static $data_structs = array(
+		Frame::OKAY 	=> "S",
 		Frame::FAIL 	=> "IS",
 		Frame::SEQUENCE => "I",
 		Frame::CONNECT	=> "S",
@@ -24,6 +26,7 @@ class Frame {
 	);
 	
 	private static $data_arrays = array(
+		Frame::OKAY		=> array('message'),
 		Frame::FAIL		=> array('type', 'desc'),
 		Frame::SEQUENCE => array('no'),
 		Frame::CONNECT	=> array('s'),
@@ -99,6 +102,7 @@ class Frame {
 				strlen($string) . " required " . $this->length);
 
 		list($temp, $string) = unpack_full(Frame::$data_structs[$this->type], $string);
+
 		$temp = array_combine(Frame::$data_arrays[$this->type], $temp);
 
 		$this->v = array_merge($this->v, $temp);
