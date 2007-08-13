@@ -26,7 +26,7 @@ class Frame {
 	);
 	
 	private static $data_arrays = array(
-		Frame::OKAY		=> array('message'),
+		Frame::OKAY		=> array('message'), 
 		Frame::FAIL		=> array('type', 'desc'),
 		Frame::SEQUENCE => array('no'),
 		Frame::CONNECT	=> array('s'),
@@ -100,6 +100,11 @@ class Frame {
 		if (strlen($string) != $this->length)
 			throw new Exception("Data string size was not correct! Length was " . 
 				strlen($string) . " required " . $this->length);
+
+		if (!array_key_exists($this->type, Frame::$data_structs))
+			throw new Exception("Don't know how to deal with this frame type {$this->type} (not in Frame::data_structs)");
+		if (!array_key_exists($this->type, Frame::$data_arrays))
+			throw new Exception("Don't know how to deal with this frame type {$this->type} (not in Frame::data_arrays)");
 
 		list($temp, $string) = unpack_full(Frame::$data_structs[$this->type], $string);
 
