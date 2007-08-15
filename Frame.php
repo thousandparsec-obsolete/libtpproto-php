@@ -4,8 +4,8 @@ include('xstruct.php');
 
 class Frame {
 	public static	$header_size	= 16; /* How long the header is */
-	private static	$header_struct	= "4sIII"; /* The structure of the header */
-	private static	$header_array	= array("protocol", "sequence", "type", "length"); /* What the values map too */
+	private static	$header_struct	= "2sbbIII"; /* The structure of the header */
+	private static	$header_array	= array("majorversion", "minorversion", "protocol", "sequence", "type", "length"); /* What the values map too */
 
 	const OKAY		= 0;
 	const FAIL		= 1;
@@ -128,7 +128,7 @@ class Frame {
 
 	function pack() {
 		$data = $this->pack_data();
-		$header = pack_full(Frame::$header_struct, array("TP03", $this->sequence, $this->type, strlen($data)));
+		$header = pack_full(Frame::$header_struct, array("TP", 4, 0, $this->sequence, $this->type, strlen($data)));
 		return $header.$data;
 	}
 
