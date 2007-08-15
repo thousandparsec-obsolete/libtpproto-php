@@ -14,6 +14,7 @@ class Frame {
 	const LOGIN		= 4;
 
 	const GAME		= 63;
+	const GETGAMES		= 64;
 
 	private static $data_structs = array(
 		Frame::OKAY 	=> "S",
@@ -22,7 +23,9 @@ class Frame {
 		Frame::CONNECT	=> "S",
 		Frame::LOGIN	=> "SS",
 
-		Frame::GAME		=> "SS[S]SSSS[SSSI][ISI]"
+		Frame::GAME		=> "SS[S]SSSS[SSSI][ISI]",
+		Frame::GETGAMES=> ""
+		
 	);
 	
 	private static $data_arrays = array(
@@ -34,6 +37,7 @@ class Frame {
 
 		Frame::GAME		=> array('name', 'key', 'tp', 'server', 'sertype', 'rule', 'rulever', 'locations', 'optional'),
 							//array('type', 'host', 'ip', 'port')
+		Frame::GETGAMES => array()
 	);
 
 	private $v = array();
