@@ -99,7 +99,7 @@ function pack_full($struct, $args) {
 	while (strlen($struct) > 0) {
 		$char = $struct[0];
 		$struct = substr($struct, 1);
-
+	
 		if ($char == ' ' or $char == '!') {
 			continue;
 		} else if ($char == '{') {
@@ -157,23 +157,28 @@ function unpack_full($struct, $string) {
 	global $ints, $sints;
 
 	$result = array();
+	//echo "UNPACK FULL<br />";
+	//echo "struct:".$struct."<br />";
+	//echo "string:".$string."<br />";
 	while (strlen($struct) > 0) {
+		
+	
 		$char = $struct[0];
 		$struct = substr($struct, 1);
-
+		
 		if ($char == ' ' or $char == '!') {
 			continue;
 		} else if ($char == '{') {
-			$end = strpos('}', $struct);
+			$end = strpos($struct, '}');
 			$substruct = substr($struct, 0, $end);
-			$struct = substr($struct, $end);
-			
+			$struct = substr($struct, $end+1);
+
 			list($result[], $string) = unpack_list('L', $substruct, $string);
 			
 		} else if ($char == '[') {
-			$end = strpos(']', $struct);
+			$end = strpos( $struct ,']');
 			$substruct = substr($struct, 0, $end);
-			$struct = substr($struct, $end);
+			$struct = substr($struct, $end+1);
 			
 			list($result[], $string) = unpack_list('I', $substruct, $string);
 		} else if ($char == 'S') {
@@ -205,6 +210,7 @@ function unpack_full($struct, $string) {
 			# Unsupported for the moment (f, d)
 			throw new Exception("Currently don't support f or d");
 		}
+
 	}
 	return array($result, $string);
 }
@@ -232,14 +238,15 @@ function pack_string($s) {
 }
 
 function unpack_string($s) {
+ 
 	list($length, $s) = unpack_full('I', $s);
 
 	$r = substr($s, 0, $length[0]);
+
 	// Remove any null terminator
 	if ($r[strlen($r)] == "\0")
 		$r = substr($r, 0, strlen($r)-1);
-
-	return array($r, substr($s, $length[0]));
+ return array($r, substr($s, $length[0]));
 }
 
 function pack_list($h, $struct, $args) {
@@ -250,6 +257,19 @@ function pack_list($h, $struct, $args) {
 		$s .= pack_full($struct, $arg);
 	}
 	return $s;
+}
+
+function unpack_list($h, $substruct, $s)
+{
+
+	list($length, $s) = unpack_full('I', $s);
+	
+	for ($i = 0; $i<$length[0] ; $i++)
+		list($r[], $s) = unpack_full($substruct, $s);
+	
+	
+	return Array($r, $s);
+	
 }
 
 /*

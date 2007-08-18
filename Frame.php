@@ -13,8 +13,8 @@ class Frame {
 	const CONNECT	= 3;
 	const LOGIN		= 4;
 
-	const GAME		= 63;
-	const GETGAMES		= 64;
+	const GAME		= 66;
+	const GETGAMES		= 65;
 
 	private static $data_structs = array(
 		Frame::OKAY 	=> "S",
@@ -23,7 +23,7 @@ class Frame {
 		Frame::CONNECT	=> "S",
 		Frame::LOGIN	=> "SS",
 
-		Frame::GAME		=> "SS[S]SSSS[SSSI][ISI]",
+		Frame::GAME		=> "SS[S]SSSS[SSSI][ISI]S",
 		Frame::GETGAMES=> ""
 		
 	);
@@ -35,7 +35,7 @@ class Frame {
 		Frame::CONNECT	=> array('s'),
 		Frame::LOGIN	=> array('username', 'password'),
 
-		Frame::GAME		=> array('name', 'key', 'tp', 'server', 'sertype', 'rule', 'rulever', 'locations', 'optional'),
+		Frame::GAME		=> array('name', 'key', 'tp', 'server', 'sertype', 'rule', 'rulever', 'locations', 'optional', 'URL'),
 							//array('type', 'host', 'ip', 'port')
 		Frame::GETGAMES => array()
 	);
@@ -111,7 +111,6 @@ class Frame {
 			throw new Exception("Don't know how to deal with this frame type {$this->type} (not in Frame::data_arrays)");
 
 		list($temp, $string) = unpack_full(Frame::$data_structs[$this->type], $string);
-
 		$temp = array_combine(Frame::$data_arrays[$this->type], $temp);
 
 		$this->v = array_merge($this->v, $temp);
